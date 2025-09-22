@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Test_launcher",
-    "slug": "Test_launcher",
+    "name": "Test_Launcher",
+    "slug": "Test_Launcher",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
