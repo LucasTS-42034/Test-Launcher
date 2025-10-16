@@ -44,16 +44,7 @@ export default function LoginScreen({ navigation }) {
 
     try {
       await signInWithEmailAndPassword(auth, email, senha);
-      Alert.alert(
-        "Sucesso!",
-        "Login realizado com sucesso!",
-        [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Home")
-          }
-        ]
-      );
+      // Navigation will be handled by auth state change in AppNavigator
     } catch (error) {
       console.error("Erro no login:", error);
       if (error.code === 'auth/user-not-found') {

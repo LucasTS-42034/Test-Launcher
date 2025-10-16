@@ -52,16 +52,7 @@ export default function RegisterScreen({ navigation }) {
 
     try {
       await createUserWithEmailAndPassword(auth, email, senha);
-      Alert.alert(
-        "Sucesso!",
-        "Usuário cadastrado com sucesso!",
-        [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Login")
-          }
-        ]
-      );
+      // Navigation will be handled by auth state change in AppNavigator
     } catch (error) {
       console.error("Erro no cadastro:", error);
       if (error.code === 'auth/email-already-in-use') {
