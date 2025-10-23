@@ -53,6 +53,8 @@ export default function RegisterScreen({ navigation }) {
     try {
       await createUserWithEmailAndPassword(auth, email, senha);
       // Navigation will be handled by auth state change in AppNavigator
+      // But to ensure, navigate explicitly
+      navigation.navigate("MainTabs");
     } catch (error) {
       console.error("Erro no cadastro:", error);
       if (error.code === 'auth/email-already-in-use') {

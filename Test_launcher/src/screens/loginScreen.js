@@ -45,6 +45,8 @@ export default function LoginScreen({ navigation }) {
     try {
       await signInWithEmailAndPassword(auth, email, senha);
       // Navigation will be handled by auth state change in AppNavigator
+      // But to ensure, navigate explicitly
+      navigation.navigate("MainTabs");
     } catch (error) {
       console.error("Erro no login:", error);
       if (error.code === 'auth/user-not-found') {

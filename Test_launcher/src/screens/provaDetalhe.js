@@ -41,7 +41,7 @@ const provasDisponiveis = [
     data: "2024",
     descricao: "Vestibular da Universidade do Estado do Rio de Janeiro",
     conteudo: "Matemática, Física, Química, Biologia, História, Geografia, Português, Inglês",
-    linkInscricao: "https://www.vestibular.ufrj.br/",
+    linkInscricao: "https://servicos.nc.ufpr.br/PortalNC/Login",
   }
 ];
 

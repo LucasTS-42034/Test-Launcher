@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { View, Text } from "react-native";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../services/firebaseConfig";
 
@@ -60,7 +61,11 @@ export default function AppNavigator() {
   }, []);
 
   if (loading) {
-    return null; // Or a loading screen
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#667eea' }}>
+        <Text style={{ color: '#fff', fontSize: 18 }}>Carregando...</Text>
+      </View>
+    );
   }
 
   return (
