@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebaseConfig";
 
@@ -8,6 +9,7 @@ export default function LoginScreen({ navigation }) {
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const validarEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -84,14 +86,26 @@ export default function LoginScreen({ navigation }) {
         editable={!carregando}
       />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        secureTextEntry
-        value={senha}
-        onChangeText={setSenha}
-        editable={!carregando}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Senha"
+          secureTextEntry={!mostrarSenha}
+          value={senha}
+          onChangeText={setSenha}
+          editable={!carregando}
+        />
+        <TouchableOpacity
+          style={styles.eyeButton}
+          onPress={() => setMostrarSenha(!mostrarSenha)}
+        >
+          <Ionicons
+            name={mostrarSenha ? "eye-off" : "eye"}
+            size={20}
+            color="#666"
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity
         style={[styles.loginButton, carregando && styles.loginButtonDisabled]}
@@ -113,7 +127,17 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
-  input: { borderWidth: 1, padding: 10, marginVertical: 8, borderRadius: 5 },
+  input: { borderWidth: 1, padding: 12, marginVertical: 6, borderRadius: 8, flex: 1, fontSize: 16 },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 8,
+    marginVertical: 6,
+  },
+  eyeButton: {
+    padding: 10,
+  },
   error: { color: "red", marginBottom: 10, textAlign: "center" },
   link: { color: "blue", marginTop: 15, textAlign: "center" },
   loginButton: {

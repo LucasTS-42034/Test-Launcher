@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebaseConfig";
 
@@ -9,6 +10,8 @@ export default function RegisterScreen({ navigation }) {
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
 
   const validarEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -93,21 +96,45 @@ export default function RegisterScreen({ navigation }) {
         autoComplete="email"
       />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Senha (mínimo 4 caracteres)"
-        secureTextEntry
-        value={senha}
-        onChangeText={setSenha}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Senha (mínimo 4 caracteres)"
+          secureTextEntry={!mostrarSenha}
+          value={senha}
+          onChangeText={setSenha}
+        />
+        <TouchableOpacity
+          style={styles.eyeButton}
+          onPress={() => setMostrarSenha(!mostrarSenha)}
+        >
+          <Ionicons
+            name={mostrarSenha ? "eye-off" : "eye"}
+            size={20}
+            color="#666"
+          />
+        </TouchableOpacity>
+      </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Confirmar senha"
-        secureTextEntry
-        value={confirmarSenha}
-        onChangeText={setConfirmarSenha}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Confirmar senha"
+          secureTextEntry={!mostrarConfirmarSenha}
+          value={confirmarSenha}
+          onChangeText={setConfirmarSenha}
+        />
+        <TouchableOpacity
+          style={styles.eyeButton}
+          onPress={() => setMostrarConfirmarSenha(!mostrarConfirmarSenha)}
+        >
+          <Ionicons
+            name={mostrarConfirmarSenha ? "eye-off" : "eye"}
+            size={20}
+            color="#666"
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
         <Text style={styles.registerButtonText}>Cadastrar</Text>
@@ -123,7 +150,17 @@ export default function RegisterScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
-  input: { borderWidth: 1, padding: 10, marginVertical: 8, borderRadius: 5 },
+  input: { borderWidth: 1, padding: 12, marginVertical: 6, borderRadius: 8, flex: 1, fontSize: 16 },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 8,
+    marginVertical: 6,
+  },
+  eyeButton: {
+    padding: 10,
+  },
   error: { color: "red", marginBottom: 10, textAlign: "center" },
   link: { color: "blue", marginTop: 15, textAlign: "center" },
   registerButton: {
