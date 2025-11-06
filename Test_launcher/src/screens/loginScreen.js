@@ -75,20 +75,22 @@ export default function LoginScreen({ navigation }) {
 
       {erro ? <Text style={styles.error}>{erro}</Text> : null}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoComplete="email"
-        editable={!carregando}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputNoBorder}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoComplete="email"
+          editable={!carregando}
+        />
+      </View>
 
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={styles.inputNoBorder}
           placeholder="Senha"
           secureTextEntry={!mostrarSenha}
           value={senha}
@@ -128,12 +130,13 @@ const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
   input: { borderWidth: 1, padding: 12, marginVertical: 6, borderRadius: 8, flex: 1, fontSize: 16 },
+  inputNoBorder: { padding: 8, flex: 1, fontSize: 16 },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
     borderRadius: 8,
-    marginVertical: 6,
+    marginVertical: 4,
   },
   eyeButton: {
     padding: 10,
