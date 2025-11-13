@@ -7,37 +7,46 @@ import {
   Alert,
   Switch,
   ScrollView,
+  TextInput,
+  Modal,
+  Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { signOut } from "firebase/auth";
+import { signOut, updateProfile } from "firebase/auth";
 import { auth } from "../services/firebaseConfig";
+import * as ImagePicker from "expo-image-picker";
 
 export default function SettingsScreen({ navigation }) {
   const [notificacoesAtivadas, setNotificacoesAtivadas] = useState(true);
-  const [temaEscuro, setTemaEscuro] = useState(false);
-  const [user, setUser] = useState(null);
+  const [displayName, setDisplayName] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newDisplayName, setNewDisplayName] = useState("");
 
   useEffect(() => {
-    const currentUser = auth.currentUser;
-    setUser(currentUser);
     loadSettings();
+    loadUserData();
   }, []);
 
   const loadSettings = async () => {
     try {
       const notificacoes = await AsyncStorage.getItem("notificacoesAtivadas");
-      const tema = await AsyncStorage.getItem("temaEscuro");
 
       if (notificacoes !== null) {
         setNotificacoesAtivadas(JSON.parse(notificacoes));
       }
-      if (tema !== null) {
-        setTemaEscuro(JSON.parse(tema));
-      }
     } catch (error) {
       console.error("Erro ao carregar configurações:", error);
+    }
+  };
+
+  const loadUserData = () => {
+    const user = auth.currentUser;
+    if (user) {
+      setDisplayName(user.displayName || "");
+      setProfileImage(user.photoURL || null);
     }
   };
 
@@ -49,14 +58,57 @@ export default function SettingsScreen({ navigation }) {
     }
   };
 
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permissão necessária", "Precisamos de permissão para acessar suas fotos.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+      try {
+        await updateProfile(auth.currentUser, {
+          photoURL: result.assets[0].uri,
+        });
+        Alert.alert("Sucesso", "Foto de perfil atualizada!");
+      } catch (error) {
+        console.error("Erro ao atualizar foto:", error);
+        Alert.alert("Erro", "Não foi possível atualizar a foto de perfil.");
+      }
+    }
+  };
+
+  const updateDisplayName = async () => {
+    if (!newDisplayName.trim()) {
+      Alert.alert("Erro", "Nome não pode estar vazio.");
+      return;
+    }
+
+    try {
+      await updateProfile(auth.currentUser, {
+        displayName: newDisplayName.trim(),
+      });
+      setDisplayName(newDisplayName.trim());
+      setModalVisible(false);
+      setNewDisplayName("");
+      Alert.alert("Sucesso", "Nome atualizado!");
+    } catch (error) {
+      console.error("Erro ao atualizar nome:", error);
+      Alert.alert("Erro", "Não foi possível atualizar o nome.");
+    }
+  };
+
   const toggleNotificacoes = (value) => {
     setNotificacoesAtivadas(value);
     saveSetting("notificacoesAtivadas", value);
-  };
-
-  const toggleTema = (value) => {
-    setTemaEscuro(value);
-    saveSetting("temaEscuro", value);
   };
 
   const handleLogout = () => {
@@ -120,17 +172,33 @@ export default function SettingsScreen({ navigation }) {
           <Text style={styles.title}>Configurações</Text>
         </View>
 
-        {/* Informações do usuário */}
+        {/* Conta */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Conta</Text>
+
           <View style={styles.userInfo}>
-            <Ionicons name="person-circle" size={50} color="#fff" />
+            <TouchableOpacity onPress={pickImage}>
+              {profileImage ? (
+                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+              ) : (
+                <View style={styles.profileImagePlaceholder}>
+                  <Ionicons name="person" size={40} color="#fff" />
+                </View>
+              )}
+            </TouchableOpacity>
             <View style={styles.userDetails}>
-              <Text style={styles.userEmail}>
-                {user?.email || "Usuário"}
-              </Text>
-              <Text style={styles.userStatus}>Conta ativa</Text>
+              <Text style={styles.userEmail}>{displayName || "Nome não definido"}</Text>
+              <Text style={styles.userStatus}>{auth.currentUser?.email}</Text>
             </View>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => {
+                setNewDisplayName(displayName);
+                setModalVisible(true);
+              }}
+            >
+              <Ionicons name="pencil" size={20} color="#fff" />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -156,23 +224,7 @@ export default function SettingsScreen({ navigation }) {
             />
           </View>
 
-          <View style={styles.settingItem}>
-            <View style={styles.settingInfo}>
-              <Ionicons name="moon" size={24} color="#fff" />
-              <View style={styles.settingText}>
-                <Text style={styles.settingTitle}>Tema Escuro</Text>
-                <Text style={styles.settingDescription}>
-                  Interface com cores escuras
-                </Text>
-              </View>
-            </View>
-            <Switch
-              value={temaEscuro}
-              onValueChange={toggleTema}
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={temaEscuro ? "#007bff" : "#f4f3f4"}
-            />
-          </View>
+
         </View>
 
         {/* Ações */}
@@ -197,6 +249,41 @@ export default function SettingsScreen({ navigation }) {
             <Text style={styles.logoutButtonText}>Sair da conta</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Modal para editar nome */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Editar Nome</Text>
+              <TextInput
+                style={styles.modalInput}
+                placeholder="Digite seu nome"
+                value={newDisplayName}
+                onChangeText={setNewDisplayName}
+                autoCapitalize="words"
+              />
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={styles.modalButtonCancel}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.modalButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.modalButtonSave}
+                  onPress={updateDisplayName}
+                >
+                  <Text style={styles.modalButtonText}>Salvar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </LinearGradient>
   );
@@ -309,5 +396,76 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
     marginLeft: 10,
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  profileImagePlaceholder: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  editButton: {
+    padding: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: "80%",
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+    color: "#333",
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  modalButtonCancel: {
+    backgroundColor: "#6c757d",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    flex: 1,
+    marginRight: 10,
+    alignItems: "center",
+  },
+  modalButtonSave: {
+    backgroundColor: "#28a745",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    flex: 1,
+    marginLeft: 10,
+    alignItems: "center",
+  },
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

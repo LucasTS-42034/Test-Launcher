@@ -19,7 +19,7 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const validarSenha = (senha) => {
-    return senha.length >= 4;
+    return senha.length >= 4 && senha.length <= 20;
   };
 
   const validarFormulario = () => {
@@ -34,7 +34,7 @@ export default function RegisterScreen({ navigation }) {
     }
 
     if (!validarSenha(senha)) {
-      setErro("A senha deve ter pelo menos 4 caracteres");
+      setErro("A senha deve ter entre 4 e 20 caracteres");
       return false;
     }
 
@@ -62,8 +62,6 @@ export default function RegisterScreen({ navigation }) {
       console.error("Erro no cadastro:", error);
       if (error.code === 'auth/email-already-in-use') {
         setErro("Este email já está cadastrado");
-      } else if (error.code === 'auth/weak-password') {
-        setErro("A senha é muito fraca");
       } else if (error.code === 'auth/invalid-email') {
         setErro("Email inválido");
       } else {
@@ -103,7 +101,7 @@ export default function RegisterScreen({ navigation }) {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.inputNoBorder}
-          placeholder="Senha (mínimo 4 caracteres)"
+          placeholder="Senha (4-20 caracteres)"
           secureTextEntry={!mostrarSenha}
           value={senha}
           onChangeText={setSenha}

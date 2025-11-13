@@ -27,8 +27,6 @@ function TabNavigator() {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Provas") {
             iconName = focused ? "document-text" : "document-text-outline";
-          } else if (route.name === "Perfil") {
-            iconName = focused ? "person" : "person-outline";
           } else if (route.name === "Configurações") {
             iconName = focused ? "settings" : "settings-outline";
           }
@@ -42,7 +40,6 @@ function TabNavigator() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Provas" component={ProvaDetalheScreen} />
-      <Tab.Screen name="Perfil" component={HomeScreen} />
       <Tab.Screen name="Configurações" component={SettingsScreen} />
     </Tab.Navigator>
   );
