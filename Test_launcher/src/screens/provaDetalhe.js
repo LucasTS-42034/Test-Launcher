@@ -15,7 +15,8 @@ const provasDisponiveis = [
     id: "1",
     nome: "ENEM",
     data: "2024",
-    descricao: "Exame Nacional do Ensino Médio - principal vestibular do Brasil",
+    descricao:
+      "Exame Nacional do Ensino Médio - principal vestibular do Brasil",
     conteudo: "Matemática, Linguagens, Ciências Humanas, Ciências da Natureza",
     linkInscricao: "https://enem.inep.gov.br/participante/#!/",
   },
@@ -24,7 +25,8 @@ const provasDisponiveis = [
     nome: "Fuvest",
     data: "2024",
     descricao: "Vestibular da Universidade de São Paulo",
-    conteudo: "Matemática, Física, Química, Biologia, História, Geografia, Português, Inglês",
+    conteudo:
+      "Matemática, Física, Química, Biologia, História, Geografia, Português, Inglês",
     linkInscricao: "https://app.fuvest.br/comum_usuario_criacao",
   },
   {
@@ -32,7 +34,8 @@ const provasDisponiveis = [
     nome: "Unicamp",
     data: "2024",
     descricao: "Vestibular da Universidade Estadual de Campinas",
-    conteudo: "Matemática, Física, Química, Biologia, História, Geografia, Português, Inglês, Literatura",
+    conteudo:
+      "Matemática, Física, Química, Biologia, História, Geografia, Português, Inglês, Literatura",
     linkInscricao: "https://www.comvest.unicamp.br/AreaDoCandidato/",
   },
   {
@@ -40,9 +43,10 @@ const provasDisponiveis = [
     nome: "IFPR",
     data: "2024",
     descricao: "Vestibular da Universidade do Estado do Rio de Janeiro",
-    conteudo: "Matemática, Física, Química, Biologia, História, Geografia, Português, Inglês",
+    conteudo:
+      "Matemática, Física, Química, Biologia, História, Geografia, Português, Inglês",
     linkInscricao: "https://servicos.nc.ufpr.br/PortalNC/Login",
-  }
+  },
 ];
 
 export default function ProvaDetalheScreen({ navigation }) {

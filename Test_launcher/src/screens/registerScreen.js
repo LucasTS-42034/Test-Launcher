@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebaseConfig";
@@ -55,14 +63,12 @@ export default function RegisterScreen({ navigation }) {
 
     try {
       await createUserWithEmailAndPassword(auth, email, senha);
-      // Navigation will be handled by auth state change in AppNavigator
-      // But to ensure, navigate explicitly
       navigation.navigate("MainTabs");
     } catch (error) {
       console.error("Erro no cadastro:", error);
-      if (error.code === 'auth/email-already-in-use') {
+      if (error.code === "auth/email-already-in-use") {
         setErro("Este email já está cadastrado");
-      } else if (error.code === 'auth/invalid-email') {
+      } else if (error.code === "auth/invalid-email") {
         setErro("Email inválido");
       } else {
         setErro("Erro ao cadastrar. Tente novamente.");
@@ -151,8 +157,20 @@ export default function RegisterScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
-  input: { borderWidth: 1, padding: 12, marginVertical: 6, borderRadius: 8, flex: 1, fontSize: 16 },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  input: {
+    borderWidth: 1,
+    padding: 12,
+    marginVertical: 6,
+    borderRadius: 8,
+    flex: 1,
+    fontSize: 16,
+  },
   inputNoBorder: { padding: 8, flex: 1, fontSize: 16 },
   inputContainer: {
     flexDirection: "row",
@@ -172,11 +190,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     marginTop: 20,
-    alignItems: "center"
+    alignItems: "center",
   },
   registerButtonText: {
     color: "white",
     fontSize: 16,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });

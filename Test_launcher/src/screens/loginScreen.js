@@ -18,17 +18,17 @@ export default function LoginScreen({ navigation }) {
 
   const validarFormulario = () => {
     if (!email.trim()) {
-      setErro("Email é obrigatório");
+      setErro("Email é obrigatório!");
       return false;
     }
 
     if (!validarEmail(email)) {
-      setErro("Email inválido");
+      setErro("Email inválido!");
       return false;
     }
 
     if (!senha.trim()) {
-      setErro("Senha é obrigatória");
+      setErro("Senha é obrigatória!");
       return false;
     }
 

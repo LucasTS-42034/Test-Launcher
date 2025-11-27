@@ -61,7 +61,10 @@ export default function SettingsScreen({ navigation }) {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Permissão necessária", "Precisamos de permissão para acessar suas fotos.");
+      Alert.alert(
+        "Permissão necessária",
+        "Precisamos de permissão para acessar suas fotos."
+      );
       return;
     }
 
@@ -112,26 +115,22 @@ export default function SettingsScreen({ navigation }) {
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      "Sair da conta",
-      "Tem certeza que deseja sair?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Sair",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await signOut(auth);
-              navigation.navigate("Login");
-            } catch (error) {
-              console.error("Erro ao sair:", error);
-              Alert.alert("Erro", "Não foi possível sair da conta");
-            }
-          },
+    Alert.alert("Sair da conta", "Tem certeza que deseja sair?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Sair",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await signOut(auth);
+            navigation.navigate("Login");
+          } catch (error) {
+            console.error("Erro ao sair:", error);
+            Alert.alert("Erro", "Não foi possível sair da conta");
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const clearAllData = () => {
@@ -167,19 +166,24 @@ export default function SettingsScreen({ navigation }) {
 
   return (
     <LinearGradient colors={["#667eea", "#764ba2"]} style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <Text style={styles.title}>Configurações</Text>
         </View>
 
-        {/* Conta */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Conta</Text>
 
           <View style={styles.userInfo}>
             <TouchableOpacity onPress={pickImage}>
               {profileImage ? (
-                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                <Image
+                  source={{ uri: profileImage }}
+                  style={styles.profileImage}
+                />
               ) : (
                 <View style={styles.profileImagePlaceholder}>
                   <Ionicons name="person" size={40} color="#fff" />
@@ -187,7 +191,9 @@ export default function SettingsScreen({ navigation }) {
               )}
             </TouchableOpacity>
             <View style={styles.userDetails}>
-              <Text style={styles.userEmail}>{displayName || "Nome não definido"}</Text>
+              <Text style={styles.userEmail}>
+                {displayName || "Nome não definido"}
+              </Text>
               <Text style={styles.userStatus}>{auth.currentUser?.email}</Text>
             </View>
             <TouchableOpacity
@@ -202,7 +208,6 @@ export default function SettingsScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Configurações do app */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Preferências</Text>
 
@@ -223,26 +228,28 @@ export default function SettingsScreen({ navigation }) {
               thumbColor={notificacoesAtivadas ? "#007bff" : "#f4f3f4"}
             />
           </View>
-
-
         </View>
 
-        {/* Ações */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Ações</Text>
 
           <TouchableOpacity style={styles.actionButton} onPress={clearAllData}>
             <Ionicons name="trash-outline" size={24} color="#ff4444" />
-            <Text style={styles.actionButtonTextRed}>Limpar todos os dados</Text>
+            <Text style={styles.actionButtonTextRed}>
+              Limpar todos os dados
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionButton} onPress={showAbout}>
-            <Ionicons name="information-circle-outline" size={24} color="#fff" />
+            <Ionicons
+              name="information-circle-outline"
+              size={24}
+              color="#fff"
+            />
             <Text style={styles.actionButtonText}>Sobre o aplicativo</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Logout */}
         <View style={styles.section}>
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <Ionicons name="log-out-outline" size={24} color="#fff" />
@@ -250,7 +257,6 @@ export default function SettingsScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {/* Modal para editar nome */}
         <Modal
           animationType="slide"
           transparent={true}

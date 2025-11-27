@@ -60,8 +60,15 @@ export default function AppNavigator() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#667eea' }}>
-        <Text style={{ color: '#fff', fontSize: 18 }}>Carregando...</Text>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#667eea",
+        }}
+      >
+        <Text style={{ color: "#fff", fontSize: 18 }}>Carregando...</Text>
       </View>
     );
   }

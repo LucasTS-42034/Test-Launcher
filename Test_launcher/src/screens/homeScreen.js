@@ -25,6 +25,7 @@ export default function HomeScreen({ navigation }) {
     loadProvas();
   }, []);
 
+  // Função para carregar as provas armazenadas localmente
   const loadProvas = async () => {
     try {
       const storedProvas = await AsyncStorage.getItem("provas");
@@ -36,6 +37,7 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+  // Função para salvar a lista de provas no armazenamento local
   const saveProvas = async (newProvas) => {
     try {
       await AsyncStorage.setItem("provas", JSON.stringify(newProvas));
@@ -44,6 +46,7 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+  // Função para adicionar uma nova prova à lista
   const addProva = () => {
     if (!nomeProva.trim() || !dataProva.trim()) {
       Alert.alert("Erro", "Nome da prova e data são obrigatórios");
@@ -67,6 +70,7 @@ export default function HomeScreen({ navigation }) {
     setModalVisible(false);
   };
 
+  // Função para excluir uma prova com confirmação do usuário
   const deleteProva = (id) => {
     Alert.alert(
       "Confirmar exclusão",
@@ -86,6 +90,7 @@ export default function HomeScreen({ navigation }) {
     );
   };
 
+  // Função para renderizar cada item da lista de provas
   const renderProva = ({ item }) => (
     <View style={styles.provaItem}>
       <View style={styles.provaContent}>
@@ -119,9 +124,7 @@ export default function HomeScreen({ navigation }) {
       {provas.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Ionicons name="document-text-outline" size={80} color="#fff" />
-          <Text style={styles.emptyText}>
-            Nenhuma prova cadastrada ainda.
-          </Text>
+          <Text style={styles.emptyText}>Nenhuma prova cadastrada ainda.</Text>
           <Text style={styles.emptySubtext}>
             Toque no botão + para adicionar uma prova.
           </Text>
@@ -207,9 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
   },
-  addButton: {
-    // Estilo para o botão de adicionar
-  },
+  addButton: {},
   emptyContainer: {
     flex: 1,
     justifyContent: "center",
