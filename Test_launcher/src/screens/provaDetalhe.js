@@ -13,7 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "./firebaseConfig"; 
+import { db } from "../services/firebaseConfig";
 
 export default function ProvaDetalheScreen({ navigation }) {
   const [selectedProva, setSelectedProva] = useState(null);
@@ -36,7 +36,7 @@ export default function ProvaDetalheScreen({ navigation }) {
         setProvas(listaProvas);
       } catch (error) {
         console.error("Erro ao buscar provas: ", error);
-        Alert.alert("Erro", "Verifique sua conexão ou as regras do Firebase.");
+        Alert.alert("Verifique sua conexão");
       } finally {
         setLoading(false);
       }
@@ -51,7 +51,7 @@ export default function ProvaDetalheScreen({ navigation }) {
       onPress={() => setSelectedProva(item)}
     >
       <View style={styles.provaContent}>
-        <Text style={styles.provaNome}>{item.nome}</Text>
+        <Text style={styles.provaNome}>{item.Nome}</Text>
         <Text style={styles.provaData}>{item.data}</Text>
         <Text style={styles.provaDescricao} numberOfLines={2}>
           {item.descricao}
@@ -70,7 +70,7 @@ export default function ProvaDetalheScreen({ navigation }) {
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.detailTitle}>{selectedProva.nome}</Text>
+        <Text style={styles.detailTitle}>{selectedProva.Nome}</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -92,7 +92,7 @@ export default function ProvaDetalheScreen({ navigation }) {
 
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={() => Linking.openURL(selectedProva.linkInscricao)}
+          onPress={() => Linking.openURL(selectedProva.linkInsc)}
         >
           <Ionicons name="link" size={20} color="#fff" />
           <Text style={styles.linkButtonText}>Ir para inscrição</Text>
